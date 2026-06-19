@@ -12,20 +12,23 @@ python -m uvicorn main:app --host 0.0.0.0 --port 8000
 
 Le modèle distilgpt2 sera téléchargé automatiquement depuis HuggingFace au premier lancement (~350 MB).
 
-### 2. Frontend (React)
+### 2. App mobile (Expo Go)
 
 ```bash
-cd frontend
+cd mobile
 npm install
-npm run dev
+npx expo start
 ```
 
-Ouvre `http://localhost:5173` dans ton navigateur.
+Scanne le QR code avec **Expo Go** sur ton iPhone.
 
-### Test sur iPhone
+#### Important — IP locale
 
-Une fois le frontend lancé, le terminal affiche une URL du type :
+Pour tester sur iPhone physique, remplace `localhost` dans `App.tsx` par l'IP de ton PC :
+
+```ts
+// App.tsx ligne 10
+const BACKEND = "http://192.168.x.x:8000"; // ton IP locale
 ```
-➜  Network: http://192.168.x.x:5173/
-```
-Ouvre cette URL dans Safari sur ton iPhone (même WiFi requis).
+
+Trouve ton IP avec : `ipconfig` (cherche "Adresse IPv4")
