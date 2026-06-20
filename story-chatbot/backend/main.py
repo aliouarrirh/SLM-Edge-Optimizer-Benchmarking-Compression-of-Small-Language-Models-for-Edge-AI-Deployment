@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from transformers import pipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 import torch
+import os
 
 app = FastAPI()
 
@@ -13,10 +14,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-device = 0 if torch.cuda.is_available() else -1
-print(f"Loading distilgpt2 on {'GPU' if device == 0 else 'CPU'}...")
-generator = pipeline("text-generation", model="distilgpt2", device=device)
-print("Model ready.")
+# Chemin vers le modèle fine-tuné local (après modal volume get)
+# Si le dossier n'existe pas, repli sur distilgpt2 de base depuis HuggingFace
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "model_compressed")
+model_source = MODEL_PATH if os.path.isdir(MODEL_PATH) else "distilgpt2"
+
+print(f"Chargement du modèle depuis : {model_source}")
+tokenizer = AutoTokenizer.from_pretrained(model_source)
+tokenizer.pad_token = tokenizer.eos_token
+
+base_model = AutoModelForCausalLM.from_pretrained(model_source)
+
+# Quantification dynamique int8 (CPU, ~2s, réduit la taille de ~50%)
+print("Application de la quantification dynamique int8...")
+model = torch.quantization.quantize_dynamic(
+    base_model, {torch.nn.Linear}, dtype=torch.qint8
+)
+model.eval()
+print("Modèle prêt (quantifié int8, CPU).")
+
+generator = pipeline(
+    "text-generation",
+    model=model,
+    tokenizer=tokenizer,
+    device=-1,  # CPU — le modèle quantifié int8 ne tourne que sur CPU
+)
 
 
 class GenerateRequest(BaseModel):

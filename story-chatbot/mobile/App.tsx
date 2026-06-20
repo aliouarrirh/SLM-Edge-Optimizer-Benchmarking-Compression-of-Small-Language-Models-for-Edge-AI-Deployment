@@ -15,7 +15,7 @@ import { StatusBar } from "expo-status-bar";
 
 // Remplace par l'IP de ton PC si tu testes sur iPhone physique
 // ex: const BACKEND = "http://192.168.1.42:8000";
-const BACKEND = "http://localhost:8000";
+const BACKEND = "http://192.168.1.111:8000";
 
 interface Message {
   id: string;
@@ -45,7 +45,11 @@ export default function App() {
     const prompt = input.trim();
     if (!prompt || loading) return;
 
-    const userMsg: Message = { id: Date.now().toString(), role: "user", text: prompt };
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      text: prompt,
+    };
     const next = [...messages, userMsg];
     setMessages(next);
     setInput("");
@@ -60,7 +64,11 @@ export default function App() {
       const data = await res.json();
       setMessages([
         ...next,
-        { id: (Date.now() + 1).toString(), role: "assistant", text: data.story },
+        {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          text: data.story,
+        },
       ]);
     } catch {
       setMessages([
@@ -116,7 +124,9 @@ export default function App() {
           keyExtractor={(m) => m.id}
           renderItem={renderItem}
           contentContainerStyle={s.list}
-          onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: true })}
+          onContentSizeChange={() =>
+            listRef.current?.scrollToEnd({ animated: true })
+          }
         />
 
         {loading && (
