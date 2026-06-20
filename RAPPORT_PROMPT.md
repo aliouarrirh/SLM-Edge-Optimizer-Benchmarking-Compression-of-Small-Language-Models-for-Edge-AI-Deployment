@@ -144,6 +144,25 @@ Inclure au minimum ces références (format APA) :
 
 ---
 
+## GRAPHIQUES À INTÉGRER
+
+Je joins les fichiers images suivants (générés par le pipeline Modal) :
+
+| Fichier | Section du rapport | Légende à utiliser |
+|---|---|---|
+| `training_curves.png` | Section 4 — Résultats | *Figure 1 : Training loss curves per optimizer over training steps. Smoothed curve overlaid on raw values.* |
+| `comparison_charts.png` | Section 4 — Résultats | *Figure 2 : Comparative metrics across 5 optimizers — perplexity before/after compression, model size, compression ratio, inference latency, throughput, and training time.* |
+
+**Instructions pour intégrer les images :**
+
+- Place chaque figure **immédiatement après** le paragraphe qui la mentionne dans la section Résultats
+- Numérote les figures (Figure 1, Figure 2, ...) et ajoute la légende **sous** l'image
+- Dans le texte, réfère-toi aux figures par leur numéro : *"As shown in Figure 1..."*, *"Figure 2 illustrates..."*
+- Si tu génères un fichier Markdown : utilise la syntaxe `![Figure 1](training_curves.png)` suivi de la légende en italique
+- Si tu génères un fichier Word (.docx) : indique `[INSERT FIGURE 1 HERE — training_curves.png]` à l'endroit exact, je les insérerai manuellement après
+
+---
+
 ## COMMANDE FINALE
 
 Génère maintenant le rapport complet en suivant exactement cette structure. Ne résume pas, ne raccourcis pas — chaque section doit être rédigée entièrement. Le rapport doit être autonome et lisible sans connaître ce prompt.
